@@ -1,0 +1,58 @@
+# Maintainer: Evan Purkhiser <evanpurkhiser@gmail.com>
+
+pkgname=lirc-irtoy-git
+pkgver=0.8.7.86.ge0ab92b
+_gitname=lirc
+pkgrel=1
+pkgdesc="Linux Infrared Remote Control driver for the Dangerous Prototypes IR toy v2 - git version"
+arch=('i686' 'x86_64')
+url="http://www.lirc.org/"
+license=('GPL')
+depends=('lirc-utils>=0.8.6')
+makedepends=('git')
+provides=('lirc')
+conflicts=('lirc')
+options=('!makeflags')
+source=("$_gitname::git://lirc.git.sourceforge.net/gitroot/lirc/lirc" 'lirc-0.9.0-usb_irtoy.patch')
+md5sums=('SKIP' '70e94ac44053b46c6dd8af0ac27bfb1f')
+
+pkgver()
+{
+	cd $_gitname
+	git describe --always | sed 's|-|.|g' | sed 's|lirc\.||'
+}
+
+prepare()
+{
+	cd $_gitname
+
+	# Fix outdated AM flags
+	sed -i 's/AM_CONFIG_HEADER/AC_CONFIG_HEADER/' configure.ac
+
+	# Create missing m4 directory since AM automake wont do this
+	mkdir -p m4
+
+	# Add the Dangerous Prototypes IR Toy by Peter Kooiman
+	msg "Patching in IR Toy v2 driver"
+	git apply ../lirc-0.9.0-usb_irtoy.patch
+
+	msg "Configuring LIRC"
+	./autogen.sh
+	
+	./configure \
+		--with-driver=usb_irtoy \
+		--with-tty=/dev/ttyACM0 \
+		--with-port=none \
+		--with-irq=none
+}
+
+build()
+{
+	msg "Starting make..."
+	make
+}
+
+package()
+{
+	make DESTDIR="$pkgdir" install
+}
