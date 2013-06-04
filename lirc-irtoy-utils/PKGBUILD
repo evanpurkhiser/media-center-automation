@@ -42,7 +42,7 @@ build() {
 
   PYTHON=python2 ./configure --enable-sandboxed --prefix=/usr \
       --with-driver=usb_irtoy --with-transmitter --with-tty=/dev/ttyACM0 \
-      --with-port=none --with-irq=none
+      --with-port=none --with-irq=none --sbindir=/usr/bin
 
   make
 }
