@@ -11,7 +11,32 @@ I have a very small media center in my bedroom with:
 
 The PC is running a minimal arch linux installation with [Kodi](kodi.tv). I'm
 using a [8Bitdo NES30 bluetooth controller](http://www.nes30.com/) to control
-this setup.
+this setup. I also have a [IRToy
+v2](http://dangerousprototypes.com/docs/USB_Infrared_Toy) connected to the PC
+allowing me to control the TV and amp.
 
 This repository contains some small tools and configurations I use to automate
-my setup, with low power usage and convinience in mind.
+my setup, with low power usage and convenience in mind.
+
+### Bluetooth connection status automation
+
+The included `bt-power-listener` script is used to listen for connection status
+changes for the NES30 controller. The idea is that the power status of the
+controller should dicate the media center being 'in use' or not.
+
+#### Power On:
+
+ * Start the Kodi standalone service using systemd
+ * Power on my TV and amp with lirc
+
+Thes two actions will only happen under the condition that Kodi isn't already
+started and playing a video.
+
+#### Power Off:
+
+ * Stop the kodi standalone service using systemd
+ * Power off my TV and amp with lirc
+
+These actions will only happen if Kodi is not currently playing any media. In
+that case instead a notification will be displayed on screen to alert me to
+turn the controller back on if it has disconnected.
