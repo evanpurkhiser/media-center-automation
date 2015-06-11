@@ -1,0 +1,9 @@
+[Unit]
+Description=Handle media-center power automation
+Requires=lircd
+
+[Service]
+ExecStart=/usr/bin/bt-power-listener
+
+[Install]
+WantedBy=multi-user.target

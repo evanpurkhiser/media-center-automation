@@ -1,0 +1,73 @@
+#!/usr/bin/python2
+#
+# Event handling for my NES30 controller power status
+#
+# Turned on:
+#  - Start the kodi-standalone systemd service
+#  - Send the IR signals to turn toggle power to my amp and TV
+#
+# Turned off:
+#  - Display notification in Kodi if watching a video. Or..
+#  - Stop the kodi-standalone service other
+#  - Send the IR signals to turn toggle power to my amp and TV
+
+import dbus
+import gobject
+import subprocess
+import httplib
+import json
+
+from dbus.mainloop.glib import DBusGMainLoop
+
+dbus_loop = DBusGMainLoop()
+bus = dbus.SystemBus(mainloop=dbus_loop)
+
+def kodi_active():
+    return subprocess.call(['systemctl', '-q', 'is-active', 'kodi']) == 0
+
+def start_kodi(start):
+    subprocess.call(['systemctl', 'start' if start else 'stop', 'kodi.service'])
+
+def kodi_rpc(method, params=None):
+    if not kodi_active(): return None
+
+    body = {'jsonrpc': '2.0', 'method': method, 'id': 1}
+    headers = {'Content-Type':'application/json'}
+
+    if params: body['params'] = params
+
+    connecton = httplib.HTTPConnection('localhost', 8080)
+    connecton.request('POST', '/jsonrpc', json.dumps(body), headers)
+
+    return json.loads(connecton.getresponse().read())['result']
+
+def send_power_ir():
+    subprocess.call(['irsend', 'SEND_ONCE', 'LG_AKB73975711', 'POWER'])
+    subprocess.call(['irsend', 'SEND_ONCE', 'SMSL_RC36', 'POWER'])
+
+# When the NES30 is connected / disconnected toggle power to the TV & amp
+def cb(iface=None, mbr=None, path=None):
+    if ('Connected' not in mbr):
+        return
+
+    controller_on = mbr['Connected']
+
+    # Just display a notice if controller disconnects while playing
+    if not controller_on and kodi_rpc('Player.GetActivePlayers'):
+        kodi_rpc('GUI.ShowNotification', {
+            'title':   'Controller Disconnected',
+            'message': 'Controller has been disconnected'
+        })
+
+        return
+
+    # Toggle device power and turn stop kodi
+    if not kodi_rpc('Player.GetActivePlayers'):
+        send_power_ir()
+        start_kodi(controller_on)
+
+# This is the address of my 8bitDo NES30 gamepad
+bus.add_signal_receiver(cb, path='/org/bluez/hci0/dev_61_04_DF_50_71_01')
+
+mainloop = gobject.MainLoop()
+mainloop.run()
