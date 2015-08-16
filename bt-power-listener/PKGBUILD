@@ -2,7 +2,7 @@
 
 pkgname=bt-power-listener
 pkgver=0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Handle media-center power automation"
 arch=('i686' 'x86_64')
 license=('MIT')
