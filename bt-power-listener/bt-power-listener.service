@@ -1,6 +1,6 @@
 [Unit]
 Description=Handle media-center power automation
-Requires=lircd
+Requires=lircd.service
 
 [Service]
 ExecStart=/usr/bin/bt-power-listener
