@@ -6,7 +6,7 @@ pkgrel=2
 pkgdesc="Handle media-center power automation"
 arch=('i686' 'x86_64')
 license=('MIT')
-depends=(python2 python2-dbus python2-gobject2 kodi-standalone-service)
+depends=(python2 python2-dbus python2-gobject2 dbus-glib)
 source=(bt-power-listener.service bt-power-listener)
 md5sums=(SKIP SKIP)
 
