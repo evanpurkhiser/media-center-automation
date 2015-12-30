@@ -3,6 +3,7 @@ Description=Handle media-center power automation
 Requires=lircd.service
 
 [Service]
+EnvironmentFile=/etc/bt-power-listener.conf
 ExecStart=/usr/bin/bt-power-listener
 
 [Install]

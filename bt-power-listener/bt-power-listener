@@ -1,6 +1,6 @@
 #!/usr/bin/python2
 #
-# Event handling for my NES30 controller power status
+# Event handling for bluetooth controller power status
 #
 # Turned on:
 #  - Start the kodi-standalone systemd service
@@ -10,7 +10,13 @@
 #  - Display notification in Kodi if watching a video. Or..
 #  - Stop the kodi-standalone service other
 #  - Send the IR signals to turn toggle power to my amp and TV
+#
+# Environment Configuration:
+#
+#   BT_POWER_LISTENER_ADAPTER_ID: Bluetooth adapater id. eg: hci0
+#   BT_POWER_LISTENER_DEVICE_ID:  Bluetooth device id.   eg: 00:01:E3:64:DD:9B
 
+import os
 import dbus
 import gobject
 import subprocess
@@ -45,7 +51,7 @@ def send_power_ir():
     subprocess.call(['irsend', 'SEND_ONCE', 'LG_AKB73975711', 'POWER'])
     subprocess.call(['irsend', 'SEND_ONCE', 'SMSL_RC36', 'POWER'])
 
-# When the NES30 is connected / disconnected toggle power to the TV & amp
+# When the controller is connected / disconnected toggle power to the TV & amp
 def cb(iface=None, mbr=None, path=None):
     if ('Connected' not in mbr):
         return
@@ -66,8 +72,14 @@ def cb(iface=None, mbr=None, path=None):
         send_power_ir()
         kodi_started(controller_on)
 
-# This is the address of my 8bitDo NES30 gamepad
-bus.add_signal_receiver(cb, path='/org/bluez/hci0/dev_61_04_DF_50_71_01')
+# Get bluethooth adapter ID and device ID to listen for connection status
+try:
+    adapter_id = os.environ['BT_POWER_LISTENER_ADAPTER_ID']
+    device_id  = os.environ['BT_POWER_LISTENER_DEVICE_ID'].replace(':', '_')
+except KeyError:
+    exit('Please configre the adapter and device ID.')
+
+bus.add_signal_receiver(cb, path="/org/bluez/{}/dev_{}".format(adapter_id, device_id))
 
 mainloop = gobject.MainLoop()
 mainloop.run()
