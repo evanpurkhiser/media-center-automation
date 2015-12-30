@@ -44,3 +44,7 @@ started and playing a video.
 These actions will only happen if Kodi is not currently playing any media. In
 that case instead a notification will be displayed on screen to alert me to
 turn the controller back on if it has disconnected.
+
+### Arch Linux installation
+
+A PKGBUILD file is provided [in my PKGBUILDs repository](https://github.com/EvanPurkhiser/PKGBUILDs/tree/master/media-center-automation)
