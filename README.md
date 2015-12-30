@@ -18,6 +18,10 @@ allowing me to control the TV and amp.
 This repository contains some small tools and configurations I use to automate
 my setup, with low power usage and convenience in mind.
 
+ * LIRC remote configurations for the SMSL Q5 Amp and LG TV.
+ * udev rule to apply the proper attribute to the NES30 bluetooth device
+ * Kodi keymapping for the NES30 bluetooth remote
+
 ### Bluetooth connection status automation
 
 The included `bt-power-listener` script is used to listen for connection status
