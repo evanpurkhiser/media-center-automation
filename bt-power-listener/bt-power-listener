@@ -25,7 +25,7 @@ bus = dbus.SystemBus(mainloop=dbus_loop)
 def kodi_active():
     return subprocess.call(['systemctl', '-q', 'is-active', 'kodi']) == 0
 
-def start_kodi(start):
+def kodi_started(start):
     subprocess.call(['systemctl', 'start' if start else 'stop', 'kodi.service'])
 
 def kodi_rpc(method, params=None):
@@ -64,7 +64,7 @@ def cb(iface=None, mbr=None, path=None):
     # Toggle device power and turn stop kodi
     if not kodi_rpc('Player.GetActivePlayers'):
         send_power_ir()
-        start_kodi(controller_on)
+        kodi_started(controller_on)
 
 # This is the address of my 8bitDo NES30 gamepad
 bus.add_signal_receiver(cb, path='/org/bluez/hci0/dev_61_04_DF_50_71_01')
