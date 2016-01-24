@@ -22,6 +22,10 @@ my setup, with low power usage and convenience in mind.
  * udev rule to apply the proper attribute to the NES30 bluetooth device
  * Kodi keymapping for the NES30 bluetooth remote
 
+For detailed specifics on the PC configuration [see the ansible
+playbook](https://github.com/EvanPurkhiser/ansible-personal/blob/master/htpc.yml)
+used to provision it.
+
 ### Bluetooth connection status automation
 
 The included `bt-power-listener` script is used to listen for connection status
