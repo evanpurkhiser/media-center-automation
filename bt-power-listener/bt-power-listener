@@ -15,9 +15,23 @@
 #
 #   BT_POWER_LISTENER_ADAPTER_ID: Bluetooth adapater id. eg: hci0
 #   BT_POWER_LISTENER_DEVICE_ID:  Bluetooth device id.   eg: 00:01:E3:64:DD:9B
+#
+# DBus Service:
+#
+# A DBus service is exported that can be used to suspend event handling upon
+# power control. This can be useful for when you'd like for the control to
+# power off without turning things off
+#
+# DBus address: htpc.bt_power_listener
+#
+# Methods:
+#
+# - suspend(state)
+#
 
 import os
 import dbus
+import dbus.service
 import gobject
 import subprocess
 import httplib
@@ -25,7 +39,7 @@ import json
 
 from dbus.mainloop.glib import DBusGMainLoop
 
-dbus_loop = DBusGMainLoop()
+dbus_loop = DBusGMainLoop(set_as_default=True)
 bus = dbus.SystemBus(mainloop=dbus_loop)
 
 def kodi_active():
@@ -51,26 +65,45 @@ def send_power_ir():
     subprocess.call(['irsend', 'SEND_ONCE', 'LG_AKB73975711', 'POWER'])
     subprocess.call(['irsend', 'SEND_ONCE', 'SMSL_RC36', 'POWER'])
 
-# When the controller is connected / disconnected toggle power to the TV & amp
-def bluez_cb(iface=None, mbr=None, path=None):
-    if ('Connected' not in mbr):
-        return
+# This object represents the bluetooth power listener service
+class BluetoothPowerListener(dbus.service.Object):
+    def __init__(self):
+        bus = dbus.SystemBus()
+        bus_name = dbus.service.BusName('htpc.bt_power_listener', bus)
 
-    controller_on = mbr['Connected']
+        dbus.service.Object.__init__(self, bus_name, '/htpc/bt_power_listener')
 
-    # Just display a notice if controller disconnects while playing
-    if not controller_on and kodi_rpc('Player.GetActivePlayers'):
-        kodi_rpc('GUI.ShowNotification', {
-            'title':   'Controller Disconnected',
-            'message': 'Controller has been disconnected'
-        })
+        # Flag indicating that actions taken in response to the controller
+        # being connected or disconnected should be ignored
+        self.suspended = False
 
-        return
+    # Callback action triggered when the controller is connected / disconnected
+    def bluez_cb(self, iface=None, mbr=None, path=None):
+        if ('Connected' not in mbr) or self.suspended:
+            return
 
-    # Toggle device power and turn stop kodi
-    if not kodi_rpc('Player.GetActivePlayers'):
-        send_power_ir()
-        kodi_started(controller_on)
+        controller_on = mbr['Connected']
+
+        # Just display a notice if controller disconnects while playing
+        if not controller_on and kodi_rpc('Player.GetActivePlayers'):
+            kodi_rpc('GUI.ShowNotification', {
+                'title':   'Controller Disconnected',
+                'message': 'Controller has been disconnected'
+            })
+
+            return
+
+        # Toggle device power and turn stop kodi
+        if not kodi_rpc('Player.GetActivePlayers'):
+            send_power_ir()
+            kodi_started(controller_on)
+
+    @dbus.service.method('htpc.bt_power_listener')
+    def suspend(self, suspend_status):
+        self.suspended = suspend_status
+
+# Instantiate the bluetooth power control service
+service = BluetoothPowerListener()
 
 # Get bluethooth adapter ID and device ID to listen for connection status
 try:
@@ -79,7 +112,7 @@ try:
 except KeyError:
     exit('Please configure the adapter and device ID.')
 
-bus.add_signal_receiver(bluez_cb, path="/org/bluez/{}/dev_{}".format(adapter_id, device_id))
+bus.add_signal_receiver(service.bluez_cb, path="/org/bluez/{}/dev_{}".format(adapter_id, device_id))
 
 mainloop = gobject.MainLoop()
 mainloop.run()
