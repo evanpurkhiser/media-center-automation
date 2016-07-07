@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.hdmi.toggle" name="HDMI Input toggler" version="1.0.0" provider-name="Evan Purkhiser">
+	<requires>
+		<import addon="xbmc.python" version="2.14.0"/>
+	</requires>
+	<extension point="xbmc.python.script" library="hdmi.py">
+		<provides>executable</provides>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<platform>all</platform>
+		<summary lang="en">Trigger HDMI toggling</summary>
+		<description lang="en">
+Triggers HDMI input switching via IR, leaving a window available to toggle back to the HTPC input.
+
+This will suspend controller disconnect / reconnect detection at the system level.
+		</description>
+		<license>MIT</license>
+		<language></language>
+		<email>evanpurkhiser@gmail.com</email>
+	</extension>
+</addon>

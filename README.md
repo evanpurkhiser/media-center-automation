@@ -49,6 +49,20 @@ These actions will only happen if Kodi is not currently playing any media. In
 that case instead a notification will be displayed on screen to alert me to
 turn the controller back on if it has disconnected.
 
+### HDMI switcher Kodi script
+
+This simple script is used to switch HDMI inputs on my TV. It will also suspend
+the bluetooth controller power listener, so that turning off the controler (or
+having it go into standby) will *not* trigger the TV and amp to turn off.
+
+The script will bring up a dialog where pressing "OK" will switch back to the
+first input, this allows the workflow of:
+
+ 1. Turn on Xbox or other device connected to HDMI-2
+ 2. Run the hdmi.switcher script (Likely from a home menu item)
+ 3. Use the device (game on!)
+ 4. Turn the controller back on and press "A" for OK.
+
 ### Arch Linux installation
 
 A PKGBUILD file is provided [in my PKGBUILDs repository](https://github.com/EvanPurkhiser/PKGBUILDs/tree/master/media-center-automation)
