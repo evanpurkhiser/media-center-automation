@@ -52,7 +52,7 @@ def send_power_ir():
     subprocess.call(['irsend', 'SEND_ONCE', 'SMSL_RC36', 'POWER'])
 
 # When the controller is connected / disconnected toggle power to the TV & amp
-def cb(iface=None, mbr=None, path=None):
+def bluez_cb(iface=None, mbr=None, path=None):
     if ('Connected' not in mbr):
         return
 
@@ -79,7 +79,7 @@ try:
 except KeyError:
     exit('Please configre the adapter and device ID.')
 
-bus.add_signal_receiver(cb, path="/org/bluez/{}/dev_{}".format(adapter_id, device_id))
+bus.add_signal_receiver(bluez_cb, path="/org/bluez/{}/dev_{}".format(adapter_id, device_id))
 
 mainloop = gobject.MainLoop()
 mainloop.run()
