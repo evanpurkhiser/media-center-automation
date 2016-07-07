@@ -77,7 +77,7 @@ try:
     adapter_id = os.environ['BT_POWER_LISTENER_ADAPTER_ID']
     device_id  = os.environ['BT_POWER_LISTENER_DEVICE_ID'].replace(':', '_')
 except KeyError:
-    exit('Please configre the adapter and device ID.')
+    exit('Please configure the adapter and device ID.')
 
 bus.add_signal_receiver(bluez_cb, path="/org/bluez/{}/dev_{}".format(adapter_id, device_id))
 
