@@ -1,66 +1,49 @@
-<!--
-The NES30 has a strange device configuration when in bluetooth Mode 1: The
-D-Pad maps to the keyboard arrows, but the other buttons still act as joystick
-buttons. In thise case, mapping the pad to the arrows is fine, we'll just let
-the keyboard map take care of that.
-
-Button Label -> ID map
-
- A: 1
- B: 2
- Y: 5
- X: 4
- L: 7
- R: 8
- Start: 12
- Select: 11
--->
 <keymap>
   <global>
-    <joystick name="8Bitdo NES30 GamePad">
-      <button id="1">Select</button>
-      <button id="2">Back</button>
-      <button id="4">FullScreen</button>
-      <button id="5">ContextMenu</button>
+    <joystick>
+      <a>Select</a>
+      <b>Back</b>
+      <x>FullScreen</x>
+      <y>ContextMenu</y>
 
-      <button id="7">PageUp</button>
-      <button id="8">PageDown</button>
+      <leftbumper>PageUp</leftbumper>
+      <rightbumper>PageDown</rightbumper>
     </joystick>
   </global>
   <MyVideos>
-    <joystick name="8Bitdo NES30 GamePad">
-      <button id="4">ToggleWatched</button>
+    <joystick>
+      <x>ToggleWatched</x>
     </joystick>
   </MyVideos>
   <FullscreenVideo>
-    <joystick name="8Bitdo NES30 GamePad">
-      <button id="1">Pause</button>
-      <button id="2">Stop</button>
-      <button id="5">AudioNextLanguage</button>
-      <button id="4">ShowSubtitles</button>
+    <joystick>
+      <a>Pause</a>
+      <b>Stop</b>
+      <y>AudioNextLanguage</y>
+      <x>ShowSubtitles</x>
 
-      <button id="7">Seek(-4)</button>
-      <button id="8">Seek(4)</button>
+      <leftbumper>Seek(-4)</leftbumper>
+      <rightbumper>Seek(4)</rightbumper>
 
-      <button id="12">OSD</button>
-      <button id="11">Info</button>
+      <back>Info</back>
+      <start>OSD</start>
     </joystick>
   </FullscreenVideo>
   <VideoOSD>
-    <joystick name="8Bitdo NES30 GamePad">
-      <button id="12">OSD</button>
-      <button id="7">LIRC.Send(SEND_ONCE SMSL_RC36 DOWN)</button>
-      <button id="8">LIRC.Send(SEND_ONCE SMSL_RC36 UP)</button>
+    <joystick>
+      <start>OSD</start>
+      <leftbumper>LIRC.Send(SEND_ONCE SMSL_RC36 DOWN)</leftbumper>
+      <rightbumper>LIRC.Send(SEND_ONCE SMSL_RC36 UP)</rightbumper>
     </joystick>
   </VideoOSD>
   <FullscreenInfo>
-    <joystick name="8Bitdo NES30 GamePad">
-      <button id="1">Pause</button>
-      <button id="2">Back</button>
-      <button id="11">Info</button>
-      <button id="112">OSD</button>
-      <button id="7">LIRC.Send(SEND_ONCE SMSL_RC36 DOWN)</button>
-      <button id="8">LIRC.Send(SEND_ONCE SMSL_RC36 UP)</button>
+    <joystick>
+      <a>Pause</a>
+      <b>Back</b>
+      <back>Info</back>
+      <start>OSD</start>
+      <leftbumper>LIRC.Send(SEND_ONCE SMSL_RC36 DOWN)</leftbumper>
+      <rightbumper>LIRC.Send(SEND_ONCE SMSL_RC36 UP)</rightbumper>
     </joystick>
   </FullscreenInfo>
 </keymap>
