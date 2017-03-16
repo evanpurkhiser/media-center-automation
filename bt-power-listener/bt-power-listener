@@ -56,10 +56,14 @@ def kodi_rpc(method, params=None):
 
     if params: body['params'] = params
 
-    connecton = httplib.HTTPConnection('localhost', 8080)
-    connecton.request('POST', '/jsonrpc', json.dumps(body), headers)
+    connection = httplib.HTTPConnection('localhost', 8080)
+    connection.request('POST', '/jsonrpc', json.dumps(body), headers)
 
-    return json.loads(connecton.getresponse().read())['result']
+    result = json.loads(connection.getresponse().read())['result']
+    connection.close()
+
+    return result
+
 
 def send_power_ir():
     subprocess.call(['irsend', 'SEND_ONCE', 'LG_AKB73975711', 'POWER'])
