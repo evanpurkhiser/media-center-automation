@@ -3,6 +3,7 @@ import xbmcgui
 import time
 import dbus
 
+
 suspend_bt_listener = dbus.SystemBus() \
     .get_object('htpc.bt_power_listener', '/htpc/bt_power_listener') \
     .get_dbus_method('suspend', 'htpc.bt_power_listener')
@@ -17,7 +18,9 @@ if not xbmcgui.Dialog().yesno("Switch to HDMI-2?", description):
 
 # Switch HDMI Input and set the bt-power-listener to suspend mode
 xbmc.executebuiltin('LIRC.Send(SEND_ONCE LG_AKB73975711 INPUT)')
+time.sleep(1)
 xbmc.executebuiltin('LIRC.Send(SEND_ONCE LG_AKB73975711 RIGHT)')
+time.sleep(1)
 xbmc.executebuiltin('LIRC.Send(SEND_ONCE LG_AKB73975711 OK)')
 suspend_bt_listener(True)
 
@@ -26,6 +29,8 @@ xbmcgui.Dialog().ok("Return to HDMI-1", "Press OK to return to HDMI-1")
 
 # Switch HDMI back and turn the bt-power-listener back on
 xbmc.executebuiltin('LIRC.Send(SEND_ONCE LG_AKB73975711 INPUT)')
+time.sleep(1)
 xbmc.executebuiltin('LIRC.Send(SEND_ONCE LG_AKB73975711 LEFT)')
+time.sleep(1)
 xbmc.executebuiltin('LIRC.Send(SEND_ONCE LG_AKB73975711 OK)')
 suspend_bt_listener(False)
