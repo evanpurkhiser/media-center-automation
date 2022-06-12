@@ -23,7 +23,7 @@ my setup, with low power usage and convenience in mind.
 - Kodi keymapping for the NES30 bluetooth remote
 
 For detailed specifics on the PC configuration [see the ansible
-playbook](https://github.com/EvanPurkhiser/ansible-personal/blob/main/htpc.yml)
+playbook](https://github.com/evanpurkhiser/ansible-personal/blob/main/htpc.yml)
 used to provision it.
 
 ### Bluetooth connection status automation
@@ -65,4 +65,4 @@ first input, this allows the workflow of:
 
 ### Arch Linux installation
 
-A PKGBUILD file is provided [in my PKGBUILDs repository](https://github.com/EvanPurkhiser/PKGBUILDs/tree/main/media-center-automation)
+A PKGBUILD file is provided [in my PKGBUILDs repository](https://github.com/evanpurkhiser/PKGBUILDs/tree/main/media-center-automation)
